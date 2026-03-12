@@ -54,7 +54,8 @@ public class SearchPageDetails extends basePage {
     private WebElement addedToBagPopup;
 
    
-
+  @FindBy(xpath="//a[@class='pdp-goToCart pdp-add-to-bag pdp-button pdp-flex pdp-center ']")
+  private WebElement goToBagBtn;
     // --- 2. Action Methods ---
     
     
@@ -119,5 +120,8 @@ public class SearchPageDetails extends basePage {
     
     public String getAddedToBagText() {
         return addedToBagPopup.getText();
+    }
+    public void clickGoToBag() {
+        goToBagBtn.click();
     }
 }

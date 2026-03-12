@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -132,8 +133,23 @@ public class CartPage extends basePage
       @FindBy(xpath = "//div[contains(text(),'PLACE ORDER')]") WebElement placeOrder;
       
       
-      // apply for coupon 
       
+      // apply for coupon 
+       
+      
+      public String getPlatformFee() {
+
+    	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    	    wait.until(ExpectedConditions.visibilityOf(platformFeeValue));
+
+    	    String priceText = platformFeeValue.getText();
+    	    String cleanPrice = priceText.replace("₹", "")
+    	                                 .replace(",", "")
+    	                                 .trim();
+
+    	    return cleanPrice;
+    	}
+     
       
       public void clickEnterPinCode() {
           enterPinCodeBtn.click();
@@ -173,7 +189,13 @@ public class CartPage extends basePage
       }
 	    
 	    public String getFinalPayableAmount() {
-	        return totalAmountFinal.getText();
+	    	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	        wait.until(ExpectedConditions.visibilityOf(totalAmountFinal));
+
+	        String priceText = totalAmountFinal.getText();
+
+	        return priceText.replace("₹", "").replace(",", "").trim();
+	       
 	    }
 	    
 	    
@@ -208,18 +230,25 @@ public class CartPage extends basePage
 	    
 	    
 	    public void selectQuantity(int productIndex, String qtyValue) {
-	        // Step 1: Dropdown par click karke popup open karein
-	        allQtyDropdowns.get(productIndex).click();
+	    	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	        JavascriptExecutor js = (JavascriptExecutor) driver;
 
-	        // Step 2: Dynamic XPath for Quantity Number
-	        // Ye XPath popup ke andar us circle ko dhoondhega jisme aapka number likha hai
-	        // normalize-space() extra space ko handle karega
-	        String dynamicQtyXpath = "//*[contains(@class, 'indicator')]//*[normalize-space()='" + qtyValue + "']";
+	
 	        
+	        WebElement dropdown = allQtyDropdowns.get(productIndex);
+	        wait.until(ExpectedConditions.elementToBeClickable(dropdown));
+	        js.executeScript("arguments[0].scrollIntoView(true);", dropdown);
+	        dropdown.click();
 	        // Number milne par click karein
-	        driver.findElement(By.xpath(dynamicQtyXpath)).click();
-
+	       
+	        String dynamicQtyXpath = "//div[@class='dialogs-base-display' and normalize-space()='" + qtyValue + "']";
+	        WebElement qty = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(dynamicQtyXpath)));
+	        js.executeScript("arguments[0].scrollIntoView(true);", qty);
+	        qty.click();
 	        // Step 3: DONE button par click karke confirm karein
+	        
+	        WebElement doneBtn = wait.until(ExpectedConditions.elementToBeClickable(doneButton));
+	        js.executeScript("arguments[0].scrollIntoView(true);", doneBtn);
 	        doneButton.click();
 	    }
 	    
@@ -233,13 +262,24 @@ public class CartPage extends basePage
 	    }
 	    
 	    public String getTotalMRP() {
-	    	String priceText =totalMRPValue.getText();
+	    	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	        wait.until(ExpectedConditions.visibilityOf(totalMRPValue));
+	        
+	       
+	        String priceText = totalMRPValue.getText();
 	    	String cleanPrice = priceText.replace("₹", "").replace(",", "").trim();
 	    	return cleanPrice;
 	    	}
 	    
 	    public String getDiscountAmount() { 
-	    	return discountValue.getText();
+	    	
+	    	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	        wait.until(ExpectedConditions.visibilityOf(discountValue));
+	        
+	       
+	        String priceText = discountValue.getText();
+	    	String cleanPrice = priceText.replace("₹", "").replace(",", "").replace("-", "").trim();
+	    	return cleanPrice;
 	    	}
 	    
 	    
