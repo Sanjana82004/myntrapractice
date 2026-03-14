@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -15,7 +16,7 @@ public class CartPage extends basePage
 	public WebDriverWait wait;
 	public CartPage(WebDriver driver) {
 		super(driver);
-		// TODO Auto-generated constructor 
+		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 		
 		
 	}
@@ -132,8 +133,23 @@ public class CartPage extends basePage
       @FindBy(xpath = "//div[contains(text(),'PLACE ORDER')]") WebElement placeOrder;
       
       
-      // apply for coupon 
       
+      // apply for coupon 
+       
+      
+      public String getPlatformFee() {
+
+    	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    	    wait.until(ExpectedConditions.visibilityOf(platformFeeValue));
+
+    	    String priceText = platformFeeValue.getText();
+    	    String cleanPrice = priceText.replace("₹", "")
+    	                                 .replace(",", "")
+    	                                 .trim();
+
+    	    return cleanPrice;
+    	}
+     
       
       public void clickEnterPinCode() {
           enterPinCodeBtn.click();
@@ -173,7 +189,13 @@ public class CartPage extends basePage
       }
 	    
 	    public String getFinalPayableAmount() {
-	        return totalAmountFinal.getText();
+	    	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	        wait.until(ExpectedConditions.visibilityOf(totalAmountFinal));
+
+	        String priceText = totalAmountFinal.getText();
+
+	        return priceText.replace("₹", "").replace(",", "").trim();
+	       
 	    }
 	    
 	    
@@ -206,22 +228,32 @@ public class CartPage extends basePage
 	    }
 	    
 	    
-	    
 	    public void selectQuantity(int productIndex, String qtyValue) {
-	        // Step 1: Dropdown par click karke popup open karein
-	        allQtyDropdowns.get(productIndex).click();
-
-	        // Step 2: Dynamic XPath for Quantity Number
-	        // Ye XPath popup ke andar us circle ko dhoondhega jisme aapka number likha hai
-	        // normalize-space() extra space ko handle karega
-	        String dynamicQtyXpath = "//*[contains(@class, 'indicator')]//*[normalize-space()='" + qtyValue + "']";
+	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	        JavascriptExecutor js = (JavascriptExecutor) driver;
+	        WebElement dropdown = allQtyDropdowns.get(productIndex);
+	        wait.until(ExpectedConditions.elementToBeClickable(dropdown));
+	        js.executeScript("arguments[0].scrollIntoView({block: 'center'});", dropdown);
+	        try {
+	            dropdown.click();
+	        } catch (Exception e) {
+	            js.executeScript("arguments[0].click();", dropdown);
+	        }
+	        String dynamicQtyXpath = "//div[@class='dialogs-base-display' and normalize-space()='" + qtyValue + "']";
+	        WebElement qty = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(dynamicQtyXpath)));
+	        js.executeScript("arguments[0].click();", qty);
+	        wait.until(ExpectedConditions.visibilityOf(doneButton));
 	        
-	        // Number milne par click karein
-	        driver.findElement(By.xpath(dynamicQtyXpath)).click();
-
-	        // Step 3: DONE button par click karke confirm karein
-	        doneButton.click();
+	        try {
+	            doneButton.click();
+	        } catch (Exception e) {
+	            
+	            js.executeScript("arguments[0].click();", doneButton);
+	        }
 	    }
+	   
+	    
+	    
 	    
 	    
 	    public void selectDonationAmountDynamically(String amount) {
@@ -233,13 +265,24 @@ public class CartPage extends basePage
 	    }
 	    
 	    public String getTotalMRP() {
-	    	String priceText =totalMRPValue.getText();
+	    	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	        wait.until(ExpectedConditions.visibilityOf(totalMRPValue));
+	        
+	       
+	        String priceText = totalMRPValue.getText();
 	    	String cleanPrice = priceText.replace("₹", "").replace(",", "").trim();
 	    	return cleanPrice;
 	    	}
 	    
 	    public String getDiscountAmount() { 
-	    	return discountValue.getText();
+	    	
+	    	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	        wait.until(ExpectedConditions.visibilityOf(discountValue));
+	        
+	       
+	        String priceText = discountValue.getText();
+	    	String cleanPrice = priceText.replace("₹", "").replace(",", "").replace("-", "").trim();
+	    	return cleanPrice;
 	    	}
 	    
 	    
@@ -256,7 +299,51 @@ public class CartPage extends basePage
 	    }
 	    
 	    
-	   
+	    
+	    
+	    
+	   // handle remove pop up
+	    
+	    @FindBy(xpath = "//*[name()='svg' and contains(@class, 'itemContainer-base-closeIcon')]")
+	    public List<WebElement> individualItemCloseIcons;
+	    
+	    @FindBy(xpath = "//div[contains(@class,'confirmOrCancelModal-buttonClass')]//button[contains(@class,'inlinebuttonV2-base-actionButton')][normalize-space()='REMOVE']")
+	    public WebElement popupConfirmRemoveBtn;
+	    
+	    @FindBy(xpath = "//div[contains(@class,'emptyCart-base-emptyDesc')]")
+	    public WebElement emptyCartMainMessage;
+	    
+	    
+	    
+	    public void removeAllItemsOneByOne() {
+	        try {
+	            // Step 1: Check karein ki items hain ya nahi
+	            // @FindBy se aane wali list stale ho sakti hai, isliye ise refresh karna zaroori hai
+	            int totalItems = individualItemCloseIcons.size();
+	            System.out.println("Total items found to remove: " + totalItems);
+
+	            for (int i = 0; i < totalItems; i++) {
+	                // Step 2: Har baar element ko fresh dhoondein taaki "Stale" error na aaye
+	                // Myntra delete ke baad DOM reload karta hai
+	                WebElement closeIcon = wait.until(ExpectedConditions.elementToBeClickable(individualItemCloseIcons.get(0)));
+	                closeIcon.click();
+
+	                // Step 3: Remove Button Popup ka wait karein
+	                wait.until(ExpectedConditions.elementToBeClickable(popupConfirmRemoveBtn)).click();
+
+	                // Step 4: Sabse Important - Item gayab hone ka wait karein
+	                // Thread.sleep yahan zaruri hai kyunki Myntra ka UI update hone mein time leta hai
+	                Thread.sleep(3000); 
+	                
+	                System.out.println("Item " + (i + 1) + " successfully removed.");
+	            }
+	        } catch (Exception e) {
+	            System.out.println("Removal process mein error: " + e.getMessage());
+	        }
+	    }
+	    
+	    
+	  
 	    
 	}
 	
