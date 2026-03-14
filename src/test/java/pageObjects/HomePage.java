@@ -34,6 +34,8 @@ public class HomePage extends basePage {
      
     //to search for beauty
     @FindBy(linkText="BEAUTY")private WebElement beautyMenu;
+    
+    
 
     //to check if logo is visible 
     public boolean isLogoDisplayed() {
@@ -67,6 +69,8 @@ public class HomePage extends basePage {
     public void clickSearch() {
         searchButton.click();
     }
+    
+    
 }
 
 //     for myntra logo

@@ -66,6 +66,7 @@ public class CartTestCases extends BaseClass{
         Assert.assertTrue(unitPrice > 0, "Unit price is not displayed correctly");
     }  */
 	
+	/*
 	@Test(priority = 2)
     public void verifyTotalPriceWhenQuantityTwo() {
 
@@ -87,7 +88,7 @@ public class CartTestCases extends BaseClass{
         System.out.println("Total before quantity update: " + totalBefore);
         System.out.println("Total after quantity update: " + totalAfter);
         
-    } 
+    }  */ 
 	
 	/*
 	@Test(priority = 3)
@@ -108,7 +109,7 @@ public class CartTestCases extends BaseClass{
     // Assert that totalAfter is greater than totalBefore
     Assert.assertTrue(totalAfter > totalBefore, "Quantity update hone par Total MRP sahi se increase nahi hua!");
         
-    } */
+    }  */
 	
 	/*
 	@Test(priority = 4)
@@ -130,7 +131,7 @@ public class CartTestCases extends BaseClass{
         
 
         Assert.assertNotEquals(priceForTwo, priceForThree,"Price did not update dynamically after changing quantity");
-    }  */
+    }  
 	/*
 	@Test(priority = 5)
     public void verifyCouponAppliedCorrectly() {
@@ -145,7 +146,7 @@ public class CartTestCases extends BaseClass{
 
         Assert.assertNotEquals(beforeCoupon, afterCoupon);
     }  */
-	/*
+	
 	@Test(priority = 6)
     public void verifyPriceConsistencyBetweenProductAndCart() {
 
@@ -162,5 +163,5 @@ public class CartTestCases extends BaseClass{
         Assert.assertTrue(price > 0);
     
 	
-} */
+} 
 }
