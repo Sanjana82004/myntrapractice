@@ -35,23 +35,11 @@ public class HomePage extends basePage {
     //for search box
     @FindBy(className = "desktop-searchBar")
     private WebElement searchBox;
+    @FindBy(className = "desktop-submit")private WebElement searchButton;
 
     //for search button
+    @FindBy(xpath = "//span[normalize-space()='Bag']") WebElement cartBtn;
 
-    @FindBy(className = "desktop-submit")private WebElement searchButton;
-    
- 
-     
-   
-    
-
-   
-
-    //for cart icon (Bag)
-    @FindBy(xpath = "//span[normalize-space()='Bag']")
-    private WebElement cartBtn;
-
-    //to check if logo is visible
     public boolean isLogoDisplayed() {
         return myntraLogo.isDisplayed();
     }
