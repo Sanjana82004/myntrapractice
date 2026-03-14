@@ -263,5 +263,3 @@ public class CartPage extends basePage
 	
 	
 	
-
-
