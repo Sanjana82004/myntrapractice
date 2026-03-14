@@ -1,9 +1,13 @@
 package pageObjects;
 
+import java.time.Duration;
+import java.util.List;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import java.util.List;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
   
 
 
@@ -20,7 +24,7 @@ public class SearchPageDetails extends basePage {
     @FindBy(css = ".pdp-title")
     private WebElement brandName;
 
-    @FindBy(css = ".pdp-name")
+    @FindBy(xpath = "//div[@class='pdp-price-info']//h1[@class='pdp-name']")
     private WebElement productName;
 
     @FindBy(css = "span[class='pdp-price'] strong")
@@ -56,6 +60,10 @@ public class SearchPageDetails extends basePage {
    
   @FindBy(xpath="//a[@class='pdp-goToCart pdp-add-to-bag pdp-button pdp-flex pdp-center ']")
   private WebElement goToBagBtn;
+  
+  
+  
+  
     // --- 2. Action Methods ---
     
     
@@ -118,10 +126,49 @@ public class SearchPageDetails extends basePage {
         return sizeErrorMessage.getText();
     }
     
+    
+    
     public String getAddedToBagText() {
         return addedToBagPopup.getText();
     }
     public void clickGoToBag() {
         goToBagBtn.click();
+    }
+    
+    
+ // Verify product title is visible
+    public boolean isProductTitleDisplayed() {
+        return productName.isDisplayed();
+    }
+
+    // Verify product price is visible
+    public boolean isProductPriceDisplayed() {
+        return productPrice.isDisplayed();
+    }
+
+    // Verify product images are visible
+    public boolean isProductImagesDisplayed() {
+        return productImages.size() > 0;
+    }
+
+    // Verify rating is visible
+    public boolean isRatingDisplayed() {
+        return productRating.isDisplayed();
+    }
+
+    // Verify size options are visible
+    public boolean isSizeOptionsDisplayed() {
+        return sizeOptions.size() > 0;
+    }
+    
+    public boolean getAddedToBagDisplayed() {
+    	try {
+           
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            wait.until(ExpectedConditions.visibilityOf(addedToBagPopup));
+            return addedToBagPopup.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
