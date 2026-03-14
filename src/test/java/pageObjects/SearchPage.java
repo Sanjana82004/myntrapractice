@@ -151,7 +151,7 @@ public class SearchPage extends basePage{
 
 	@FindBy(xpath = "(//h3[@class='product-brand'])[1]")
 	WebElement firstProductBrand;
-
+	
 	@FindBy(xpath = "(//h4[@class='product-product'])[1]")
 	WebElement firstProductName;
 

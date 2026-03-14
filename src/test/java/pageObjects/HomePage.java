@@ -1,6 +1,5 @@
 package pageObjects;
 
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -9,35 +8,36 @@ public class HomePage extends basePage {
 
     //constructor
     public HomePage(WebDriver driver) {
-    	
-    	//we can use it when basePage is extended
+        //we can use it when basePage is extended
         super(driver);
     }
 
     //for myntra logo
-    @FindBy(className = "desktop-logo")private WebElement myntraLogo;
+    @FindBy(className = "desktop-logo")
+    private WebElement myntraLogo;
 
     //for men menu
-    @FindBy(linkText = "MEN")private WebElement menMenu;
+    @FindBy(linkText = "MEN")
+    private WebElement menMenu;
 
     //for women menu
-    @FindBy(linkText = "WOMEN")private WebElement womenMenu;
+    @FindBy(linkText = "WOMEN")
+    private WebElement womenMenu;
 
-    //for search menu
-    @FindBy(className = "desktop-searchBar")private WebElement searchBox;
+    //for kids menu
+    @FindBy(linkText = "KIDS")
+    private WebElement kidsMenu;
+
+    //for beauty menu
+    @FindBy(linkText = "BEAUTY")
+    private WebElement beautyMenu;
+
+    //for search box
+    @FindBy(className = "desktop-searchBar")
+    private WebElement searchBox;
 
     //for search button
-    @FindBy(className = "desktop-submit")private WebElement searchButton;
-    
-    //to search for kids
-    @FindBy(linkText="KIDS")private WebElement kidsMenu;
-     
-    //to search for beauty
-    @FindBy(linkText="BEAUTY")private WebElement beautyMenu;
-    
-    
 
-    //to check if logo is visible 
     public boolean isLogoDisplayed() {
         return myntraLogo.isDisplayed();
     }
@@ -51,11 +51,13 @@ public class HomePage extends basePage {
     public void clickWomenMenu() {
         womenMenu.click();
     }
-    
+
+    //to click kids menu
     public void clickKids() {
         kidsMenu.click();
     }
-    
+
+    //to click beauty menu
     public void clickBeauty() {
         beautyMenu.click();
     }
@@ -69,28 +71,10 @@ public class HomePage extends basePage {
     public void clickSearch() {
         searchButton.click();
     }
-    
-    
+
+
+    //to click cart icon
+    public void clickCartIcon() {
+        cartBtn.click();
+    }
 }
-
-//     for myntra logo
-//    @FindBy(css = ".desktop-logo")private WebElement myntraLogo;
-//
-//    for men menu
-//    @FindBy(css = "a[href*='men']")private WebElement menMenu;
-//
-//    for women menu
-//    @FindBy(css = "a[href*='women']")private WebElement womenMenu;
-//
-//    for search box
-//    @FindBy(css = ".desktop-searchBar")private WebElement searchBox;
-//
-//    for search button
-//    @FindBy(css = ".desktop-submit")private WebElement searchButton;
-//
-//    for kids menu    
-//    @FindBy(css = "a[href*='kids']")private WebElement kidsMenu;
-//
-//    for beauty menu
-//    @FindBy(css = "a[href*='beauty']")private WebElement beautyMenu;
-
