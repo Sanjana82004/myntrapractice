@@ -61,7 +61,7 @@ public class sortingPage extends basePage{
         wait.until(ExpectedConditions.visibilityOf(searchBox));
         searchBox.sendKeys(product);
     }
-
+  
     //to click search button
     public void clickSearch() {
     	
